@@ -6,46 +6,33 @@ const MigrantHeroSection = () => {
   return (
     <section className="relative pt-20 pb-16 lg:pt-24 lg:pb-20 overflow-hidden">
       {/* Background with Indian Flag Gradient - Smooth Top & Bottom Fade */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 opacity-20">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1600 900"
-            preserveAspectRatio="xMidYMid slice"
-            className="w-full h-full"
-          >
-            <defs>
-              {/* Tricolor vertical gradient */}
-              <linearGradient id="flag-gradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#FF9933" stopOpacity="0" /> 
-                <stop offset="8%" stopColor="#FF9933" stopOpacity="0.3" />
-                <stop offset="15%" stopColor="#FF9933" stopOpacity="1" />
-                <stop offset="35%" stopColor="#FF9933" stopOpacity="1" />
-                <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
-                <stop offset="65%" stopColor="#138808" stopOpacity="1" />
-                <stop offset="85%" stopColor="#138808" stopOpacity="1" />
-                <stop offset="92%" stopColor="#138808" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#138808" stopOpacity="0" /> 
-              </linearGradient>
+        <div className="absolute inset-0">
+  {/* Base subtle gradient */}
+  <div className="absolute inset-0 bg-gradient-to-br from-white to-blue-50" />
 
-              {/* Vertical fade mask (only top + bottom) */}
-              <linearGradient id="vertical-fade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="white" stopOpacity="0" />
-                <stop offset="10%" stopColor="white" stopOpacity="1" />
-                <stop offset="90%" stopColor="white" stopOpacity="1" />
-                <stop offset="100%" stopColor="white" stopOpacity="0" />
-              </linearGradient>
+  {/* Wavy tricolor overlay */}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1440 320"
+    className="absolute bottom-0 w-full h-64 opacity-30"
+    preserveAspectRatio="none"
+  >
+    <path
+      fill="#FF9933"
+      d="M0,160L48,165.3C96,171,192,181,288,165.3C384,149,480,107,576,122.7C672,139,768,213,864,229.3C960,245,1056,203,1152,197.3C1248,192,1344,224,1392,240L1440,256L1440,320L0,320Z"
+    />
+    <path
+      fill="#ffffff"
+      d="M0,256L48,261.3C96,267,192,277,288,256C384,235,480,181,576,186.7C672,192,768,256,864,256C960,256,1056,192,1152,186.7C1248,181,1344,235,1392,256L1440,277L1440,320L0,320Z"
+    />
+    <path
+      fill="#138808"
+      d="M0,288L48,272C96,256,192,224,288,213.3C384,203,480,213,576,240C672,267,768,309,864,298.7C960,288,1056,224,1152,197.3C1248,171,1344,181,1392,186.7L1440,192L1440,320L0,320Z"
+    />
+  </svg>
+</div>
 
-              <mask id="blend-mask">
-                <rect width="1600" height="900" fill="url(#vertical-fade)" />
-              </mask>
-            </defs>
 
-            {/* Apply gradient with vertical fade mask */}
-            <rect width="1600" height="900" fill="url(#flag-gradient)" mask="url(#blend-mask)" />
-          </svg>
-        </div>
-      </div>
 
       {/* Hero Content */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,15 +59,6 @@ const MigrantHeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <Button 
-              variant="default"
-              size="lg"
-              iconName="ArrowRight"
-              iconPosition="right"
-              className="w-full sm:w-auto"
-            >
-              Get Started
-            </Button>
             
             <Button 
               variant="outline"
