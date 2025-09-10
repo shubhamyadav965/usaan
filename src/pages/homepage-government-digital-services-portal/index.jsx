@@ -9,7 +9,7 @@ const Homepage = () => {
   return (
     <div className="min-h-screen bg-background">
       <MigrantHealthHeader />  
-      <main>
+      <main className="pt-16">
         <MigrantHeroSection /> 
         <FeaturesSection /> 
         <HowItWorksSection /> 

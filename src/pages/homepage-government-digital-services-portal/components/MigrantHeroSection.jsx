@@ -36,7 +36,7 @@ const MigrantHeroSection = () => {
 
       {/* Hero Content */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-4xl mx-auto">
+        <div className="text-center max-w-5xl mx-auto">
           {/* Badge */}
           <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-8">
             <Icon name="Shield" size={16} />
@@ -44,7 +44,7 @@ const MigrantHeroSection = () => {
           </div>
 
           {/* Main Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-6 leading-tight">
             Digital Health Record System
             <span className="block text-text-primary mt-2">
               for Migrant Workers in Kerala
@@ -58,14 +58,15 @@ const MigrantHeroSection = () => {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+           
             
             <Button 
               variant="outline"
               size="lg"
               iconName="Play"
               iconPosition="left"
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto min-w-[160px]"
             >
               Watch Demo
             </Button>
@@ -73,22 +74,22 @@ const MigrantHeroSection = () => {
 
           {/* Stats Row */}
           <div className="mt-16 pt-8 border-t border-border">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
               <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-primary mb-1">50K+</div>
-                <div className="text-sm text-muted-foreground">Registered Workers</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary mb-1">50K+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Registered Workers</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-primary mb-1">500+</div>
-                <div className="text-sm text-muted-foreground">Healthcare Centers</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary mb-1">500+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Healthcare Centers</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-primary mb-1">14</div>
-                <div className="text-sm text-muted-foreground">Districts Covered</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary mb-1">14</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Districts Covered</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-primary mb-1">99.9%</div>
-                <div className="text-sm text-muted-foreground">Data Security</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary mb-1">99.9%</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Data Security</div>
               </div>
             </div>
           </div>

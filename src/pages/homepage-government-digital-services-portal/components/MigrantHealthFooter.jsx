@@ -26,8 +26,8 @@ const MigrantHealthFooter = () => {
   return (
     <footer className="bg-primary text-white">
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Project Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-3 mb-6">
@@ -68,10 +68,10 @@ const MigrantHealthFooter = () => {
           </div>
 
           {/* Contact Information */}
-          <div className="lg:col-span-2">
+          <div className="md:col-span-1 lg:col-span-2">
             <h3 className="font-semibold text-lg mb-6">Contact Information</h3>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {/* Email */}
               <div className="flex items-start space-x-3">
                 <Icon name="Mail" size={20} className="text-secondary mt-0.5" />
@@ -101,7 +101,7 @@ const MigrantHealthFooter = () => {
               </div>
 
               {/* Address */}
-              <div className="flex items-start space-x-3 sm:col-span-2">
+              <div className="flex items-start space-x-3">
                 <Icon name="MapPin" size={20} className="text-secondary mt-0.5" />
                 <div>
                   <div className="text-sm font-medium mb-1">Address</div>
@@ -149,8 +149,8 @@ const MigrantHealthFooter = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
             {/* Copyright */}
             <div className="text-sm text-white/80">
               © 2025 Government of Kerala. All rights reserved. | DPDP 2023 Compliant
@@ -177,7 +177,7 @@ const MigrantHealthFooter = () => {
       {/* Emergency Contact Strip */}
       <div className="bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex items-center justify-center space-x-4 text-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm text-center sm:text-left">
             <Icon name="AlertCircle" size={16} className="text-white" />
             <span className="text-white font-medium">Health Emergency:</span>
             <a 

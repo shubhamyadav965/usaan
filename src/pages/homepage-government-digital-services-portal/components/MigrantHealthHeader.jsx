@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { User, UserPlus, Menu, X, ChevronDown, Check, Heart, HelpCircle, Grid3X3, ChevronRight } from 'lucide-react';
 
 const MigrantHealthHeader = () => {
@@ -31,8 +32,8 @@ const MigrantHealthHeader = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-gray-100">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between h-18 px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo Section */}
           <a 
             href="/" 
@@ -56,10 +57,10 @@ const MigrantHealthHeader = () => {
             
             {/* Brand Text */}
             <div className="hidden sm:block">
-              <div className="text-xl font-bold text-gray-900 leading-tight">
+              <div className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">
                 Migrant Health Records
               </div>
-              <div className="text-sm text-[#003D82] font-medium">
+              <div className="text-xs sm:text-sm text-[#003D82] font-medium">
                 Government of Kerala
               </div>
             </div>
@@ -115,16 +116,12 @@ const MigrantHealthHeader = () => {
           {/* Right Section */}
           <div className="flex items-center space-x-3">
             {/* Login Button */}
-            <button className="hidden sm:flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-medium text-gray-700 border border-gray-200 hover:border-[#003D82] hover:text-[#003D82] hover:bg-[#003D82]/10 transition-all duration-200">
+            <Link to="/role-selection" className="hidden sm:flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-medium text-gray-700 border border-gray-200 hover:border-[#003D82] hover:text-[#003D82] hover:bg-[#003D82]/10 transition-all duration-200">
               <User size={16} />
               <span>Login</span>
-            </button>
+            </Link>
 
-            {/* Signup Button */}
-            <button className="hidden sm:flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-[#003D82] hover:bg-[#002a5c] shadow-lg shadow-[#003D82]/20 hover:scale-[1.02] transition-all duration-200">
-              <UserPlus size={16} />
-              <span>Sign Up</span>
-            </button>
+           
 
             {/* Mobile Menu Button */}
             <button
@@ -140,7 +137,7 @@ const MigrantHealthHeader = () => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-100 bg-white">
-            <div className="px-6 py-6 space-y-6">
+            <div className="px-4 sm:px-6 py-6 space-y-6">
               {/* Navigation Items */}
               <div className="space-y-3">
                 <button 
@@ -204,10 +201,10 @@ const MigrantHealthHeader = () => {
 
               {/* Action Buttons Mobile */}
               <div className="border-t border-gray-100 pt-6 space-y-3">
-                <button className="flex items-center justify-center space-x-2 w-full px-6 py-4 rounded-xl text-sm font-medium text-gray-700 border border-gray-200 hover:border-[#003D82] hover:text-[#003D82] hover:bg-[#003D82]/10 transition-all duration-200">
+                <Link to="/role-selection" className="flex items-center justify-center space-x-2 w-full px-6 py-4 rounded-xl text-sm font-medium text-gray-700 border border-gray-200 hover:border-[#003D82] hover:text-[#003D82] hover:bg-[#003D82]/10 transition-all duration-200">
                   <User size={18} />
                   <span>Login to Portal</span>
-                </button>
+                </Link>
                 <button className="flex items-center justify-center space-x-2 w-full px-6 py-4 rounded-xl text-sm font-medium text-white bg-[#003D82] hover:bg-[#002a5c] shadow-lg shadow-[#003D82]/20 transition-all duration-200">
                   <UserPlus size={18} />
                   <span>Create New Account</span>
@@ -222,3 +219,4 @@ const MigrantHealthHeader = () => {
 };
 
 export default MigrantHealthHeader;
+

@@ -73,32 +73,33 @@ const HowItWorksSection = () => {
         {/* Steps */}
         <div className="relative">
           {/* Vertical Line */}
-          <div className="absolute left-10 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#003D82] via-[#34D399] to-[#F97316]"></div>
+          <div className="absolute left-8 sm:left-10 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#003D82] via-[#34D399] to-[#F97316]"></div>
 
-          <div className="space-y-12 relative z-10">
+          <div className="space-y-8 sm:space-y-12 relative z-10">
             {steps.map((step) => (
               <div
                 key={step.id}
-                className="flex items-start space-x-8 group"
+                className="flex items-start space-x-4 sm:space-x-8 group"
               >
                 {/* Step Circle */}
                 <div
-                  className={`relative flex-shrink-0 w-20 h-20 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-xl`}
+                  className={`relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl`}
                 >
                   <span>{step.number}</span>
 
                   {/* Icon overlay */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                    <Icon name={step.icon} size={28} className="text-white" />
+                    <Icon name={step.icon} size={20} className="text-white sm:hidden" />
+                    <Icon name={step.icon} size={28} className="text-white hidden sm:block" />
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 pt-2">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                <div className="flex-1 pt-1 sm:pt-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed max-w-2xl">
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-2xl">
                     {step.description}
                   </p>
                 </div>

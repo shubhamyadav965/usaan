@@ -4,6 +4,8 @@ import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
 import NotFound from "pages/NotFound";
 import Homepage from './pages/homepage-government-digital-services-portal';
+import RoleSelection from './pages/RoleSelection';
+import Login from './pages/Login';
 
 const Routes = () => {
   return (
@@ -14,6 +16,8 @@ const Routes = () => {
         {/* Define your route here */}
         <Route path="/" element={<Homepage />} />
         <Route path="/homepage-government-digital-services-portal" element={<Homepage />} />
+        <Route path="/role-selection" element={<RoleSelection />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>
       </ErrorBoundary>
