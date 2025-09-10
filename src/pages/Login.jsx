@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import Icon from '../components/AppIcon';
-import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
+import React, { useState, useEffect } from "react";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import Icon from "../components/AppIcon";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
 
 const Login = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const role = searchParams.get('role') || 'doctor';
-  
+  const role = searchParams.get("role") || "doctor";
+
   const [step, setStep] = useState(1); // 1: Input credentials, 2: OTP verification
   const [formData, setFormData] = useState({
-    mobileNumber: '',
-    id: '',
-    otp: ''
+    mobileNumber: "",
+    id: "",
+    otp: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -21,26 +21,26 @@ const Login = () => {
 
   // Redirect to role selection if no role specified
   useEffect(() => {
-    if (!searchParams.get('role')) {
-      navigate('/role-selection');
+    if (!searchParams.get("role")) {
+      navigate("/role-selection");
     }
   }, [searchParams, navigate]);
 
   const getRoleInfo = () => {
-    return role === 'health-officer' 
+    return role === "health-officer"
       ? {
-          title: 'Health Officer',
-          idLabel: 'Health Officer ID',
-          idPlaceholder: 'Enter your Health Officer ID',
-          icon: 'Shield',
-          description: 'Access health management and coordination features'
+          title: "Health Officer",
+          idLabel: "Health Officer ID",
+          idPlaceholder: "Enter your Health Officer ID",
+          icon: "Shield",
+          description: "Access health management and coordination features",
         }
       : {
-          title: 'Doctor',
-          idLabel: 'Doctor ID / Registration Number',
-          idPlaceholder: 'Enter your Doctor ID',
-          icon: 'Stethoscope',
-          description: 'Access patient records and medical features'
+          title: "Doctor",
+          idLabel: "Doctor ID / Registration Number",
+          idPlaceholder: "Enter your Doctor ID",
+          icon: "Stethoscope",
+          description: "Access patient records and medical features",
         };
   };
 
@@ -48,30 +48,30 @@ const Login = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleBackToRoleSelection = () => {
-    navigate('/role-selection');
+    navigate("/role-selection");
   };
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setOtpSent(true);
       setStep(2);
       setCountdown(60);
       setIsLoading(false);
-      
+
       // Start countdown
       const timer = setInterval(() => {
-        setCountdown(prev => {
+        setCountdown((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
             return 0;
@@ -85,21 +85,27 @@ const Login = () => {
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     // Simulate OTP verification
     setTimeout(() => {
       setIsLoading(false);
       // Here you would typically redirect to dashboard
-      alert('Login successful! Redirecting to dashboard...');
+      if (role === "health-officer") {
+        navigate("/health-officer-dashboard");
+      } else if (role === "doctor") {
+        navigate("/doctor-dashboard");
+      } else {
+        navigate("/");
+      }
     }, 1500);
   };
 
   const handleResendOTP = () => {
     setCountdown(60);
-    setFormData(prev => ({ ...prev, otp: '' }));
-    
+    setFormData((prev) => ({ ...prev, otp: "" }));
+
     const timer = setInterval(() => {
-      setCountdown(prev => {
+      setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
           return 0;
@@ -121,19 +127,26 @@ const Login = () => {
       <div className="relative w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center space-x-3 mb-6 group">
+          <Link
+            to="/"
+            className="inline-flex items-center space-x-3 mb-6 group"
+          >
             <div className="relative">
               <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-all duration-300">
-                <svg 
-                  viewBox="0 0 24 24" 
+                <svg
+                  viewBox="0 0 24 24"
                   className="w-7 h-7 text-white"
                   fill="currentColor"
                 >
-                  <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1V3H9V1L3 7V9H21ZM21 10H3V12H5V18C5 19.1 5.9 20 7 20H17C18.1 20 19 19.1 19 18V12H21V10Z"/>
+                  <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1V3H9V1L3 7V9H21ZM21 10H3V12H5V18C5 19.1 5.9 20 7 20H17C18.1 20 19 19.1 19 18V12H21V10Z" />
                 </svg>
               </div>
               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-rose-500 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
-                <Icon name="Heart" size={10} className="text-white fill-current" />
+                <Icon
+                  name="Heart"
+                  size={10}
+                  className="text-white fill-current"
+                />
               </div>
             </div>
             <div>
@@ -147,13 +160,12 @@ const Login = () => {
           </Link>
 
           <h1 className="text-2xl sm:text-3xl font-bold text-text-primary mb-2">
-            {step === 1 ? `Login as ${roleInfo.title}` : 'Verify OTP'}
+            {step === 1 ? `Login as ${roleInfo.title}` : "Verify OTP"}
           </h1>
           <p className="text-text-secondary">
-            {step === 1 
+            {step === 1
               ? roleInfo.description
-              : 'We\'ve sent a 6-digit code to your mobile number'
-            }
+              : "We've sent a 6-digit code to your mobile number"}
           </p>
         </div>
 
@@ -163,7 +175,10 @@ const Login = () => {
             <form onSubmit={handleSendOTP} className="space-y-6">
               {/* Mobile Number Input */}
               <div className="space-y-2">
-                <label htmlFor="mobileNumber" className="text-sm font-medium text-text-primary">
+                <label
+                  htmlFor="mobileNumber"
+                  className="text-sm font-medium text-text-primary"
+                >
                   Mobile Number
                 </label>
                 <div className="relative">
@@ -185,7 +200,10 @@ const Login = () => {
 
               {/* ID Input */}
               <div className="space-y-2">
-                <label htmlFor="id" className="text-sm font-medium text-text-primary">
+                <label
+                  htmlFor="id"
+                  className="text-sm font-medium text-text-primary"
+                >
                   {roleInfo.idLabel}
                 </label>
                 <div className="relative">
@@ -230,7 +248,10 @@ const Login = () => {
             <form onSubmit={handleVerifyOTP} className="space-y-6">
               {/* OTP Input */}
               <div className="space-y-2">
-                <label htmlFor="otp" className="text-sm font-medium text-text-primary">
+                <label
+                  htmlFor="otp"
+                  className="text-sm font-medium text-text-primary"
+                >
                   Enter OTP
                 </label>
                 <div className="relative">
@@ -250,7 +271,8 @@ const Login = () => {
                   />
                 </div>
                 <p className="text-xs text-text-secondary">
-                  OTP sent to +91 {formData.mobileNumber.slice(0, 2)}****{formData.mobileNumber.slice(-2)}
+                  OTP sent to +91 {formData.mobileNumber.slice(0, 2)}****
+                  {formData.mobileNumber.slice(-2)}
                 </p>
               </div>
 
@@ -324,18 +346,29 @@ const Login = () => {
         {/* Footer Links */}
         <div className="mt-8 text-center space-y-4">
           <div className="flex items-center justify-center space-x-6 text-sm">
-            <Link to="/" className="text-text-secondary hover:text-primary transition-colors">
+            <Link
+              to="/"
+              className="text-text-secondary hover:text-primary transition-colors"
+            >
               Back to Home
             </Link>
             <span className="text-border">|</span>
-            <Link to="/help" className="text-text-secondary hover:text-primary transition-colors">
+            <Link
+              to="/help"
+              className="text-text-secondary hover:text-primary transition-colors"
+            >
               Need Help?
             </Link>
           </div>
-          
+
           <div className="text-xs text-text-secondary">
-            <p>By logging in, you agree to our Terms of Service and Privacy Policy</p>
-            <p className="mt-1">© 2025 Government of Kerala. All rights reserved.</p>
+            <p>
+              By logging in, you agree to our Terms of Service and Privacy
+              Policy
+            </p>
+            <p className="mt-1">
+              © 2025 Government of Kerala. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
