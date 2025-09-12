@@ -10,55 +10,69 @@ dotenv.config();
 
 export const login = async (req, res) => {
   try {
-    // get data from request ki body
-    const { email, password } = req.body;
-
+    // get data from request body
+    const { id, email, role } = req.body;
+    console.log("Role in login func",role);
+    console.log("email in login func",email);
+    console.log("id in login func",id);
     // validation
-    if (!email || !password) {
+    if (!email || !id || !role) {
       return res.status(400).json({
         success: false,
         message: "All fields are required, please try again.",
       });
     }
 
-    const user = await User.findOne({ email }).populate("additionalDetails");
+    // Check if user is authorized
+    const checkUserPresent = mailData.includes(email);
+    
+    if (!checkUserPresent) {
+      return res.status(401).json({
+        success: false,
+        message: "User not authorized",
+      });
+    }
+
+    // Find user in database or create if doesn't exist
+    let user = await User.findOne({ email });
+    
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "User is not registrered, please signup first",
+      // Create new user if doesn't exist
+      user = await User.create({
+        id,
+        email,
+        accountType: role, // default type
+        image: `https://api.dicebear.com/5.x/initials/svg?seed=${email}`,
       });
     }
 
-    if (await bcrypt.compare(password, user.password)) {
-      const payload = {
-        email: user.email,
-        id: user._id,
-        accountType: user.accountType,
-      };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: "24h",
-      });
-      user.token = token;
-      user.password = undefined;
+    // Create JWT token
+    const payload = {
+      email: user.email,
+      id: user._id,
+      accountType: user.accountType,
+    };
+    
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
 
-      // create cookie and send respponse.
-      const options = {
-        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      };
-      res.cookie("token", token, options).status(200).json({
-    //res.coookie("key" , "value",options).
-        success: true,
-        token,
-        user,
-        message: "Logged in SuccessFully.",
-      });
-    } else {
-      return res.status(401).json({
-        success: false,
-        message: "Password is incorrect",
-      });
-    }
+    // Remove sensitive data
+    user.password = undefined;
+
+    // create cookie and send response
+    const options = {
+      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    };
+    
+    res.cookie("token", token, options).status(200).json({
+      success: true,
+      token,
+      user,
+      message: "Logged in Successfully.",
+    });
+    
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -72,7 +86,7 @@ export const login = async (req, res) => {
 export const sendOTP = async (req, res) => {
   try {
     const { email } = req.body;
-
+    console.log("Email in send OTP func",email);
     if (!email) { 
       return res.status(400).json({
         success: false,
@@ -84,12 +98,12 @@ export const sendOTP = async (req, res) => {
     const checkUserPresent = mailData.includes(email);
     
     // Also check if user exists in database
-    const existingUser = await User.findOne({ email });
+    // const existingUser = await User.findOne({ email });
 
-    if (!checkUserPresent && !existingUser) {
+    if (!checkUserPresent) {
       return res.status(401).json({
         success: false,
-        message: "User Not registered",
+        message: "User Not Authorized",
       });
     }
 

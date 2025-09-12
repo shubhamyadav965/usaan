@@ -1,6 +1,10 @@
 "use client";
 
+import { dispatch } from "d3";
 import React, { useState, createContext, useContext } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "services/operations/authAPI";
 
 // --- SVG Icons ---
 const Stethoscope = (props) => (
@@ -408,11 +412,12 @@ const useAuth = () => useContext(AuthContext);
 export default function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogout = () => {
-    logout();
+    dispatch(logout(navigate));
     router.push("/");
   };
 

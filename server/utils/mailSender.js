@@ -13,12 +13,12 @@ const mailSender = async(email, title, body) => {
         })
 
         let info = await transporter.sendMail({
-            from:'amitusarasarapadha@gmail.com',
+            from:'atulsingh171202@gmail.com',
             to:`${email}`,
             subject:`${title}`,
             html:`${body}`,
         })
-        // console.log(info);
+        console.log("info", info);
         return info;
     }
     catch(error){

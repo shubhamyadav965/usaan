@@ -72,17 +72,13 @@ const Login = () => {
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData.email);
-    if (!formData.email || !formData.id) return;
+    if (!formData.email || !formData.id) {
+      console.error("Email and ID are required");
+      return;}
     setIsLoading(true);
+    console.log("Sending OTP to:", formData.email);
     try {
-      const res = await sendOtp(formData.email);
-      if (res && res.data.success) {
-        setStep(2);
-        startCountdown(60);
-      } else {
-        console.error("Failed to send OTP", res);
-      }
+      dispatch(sendOtp(formData.email, setStep));
     } catch (err) {
       console.error(err);
     } finally {
@@ -95,17 +91,9 @@ const Login = () => {
     if (formData.otp.length !== 6) return;
     setIsLoading(true);
     try {
-      const res = await login(formData.email, formData.otp);
-      if (res && res.success) {
-        // store token and redirect based on role
-        if (res.token) dispatch(setToken(res.token));
-        if (role === "health-officer") navigate("/health-officer-dashboard");
-        else if (role === "doctor") navigate("/doctor-dashboard");
-        else navigate("/");
-      } else {
-        console.error("OTP verification failed", res);
+      dispatch(login(formData.email,formData.id,navigate,role));
       }
-    } catch (err) {
+   catch (err) {
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -116,8 +104,7 @@ const Login = () => {
     if (countdown > 0) return;
     setFormData((prev) => ({ ...prev, otp: "" }));
     try {
-      const res = await sendOtp(formData.email);
-      if (res && res.data.success) startCountdown(60);
+      dispatch(sendOtp(formData.email));
     } catch (err) {
       console.error(err);
     }
@@ -234,7 +221,7 @@ const Login = () => {
                   />
                 </div>
                 <p className="text-xs text-text-secondary">
-                  OTP sent to +91 {formData.email.slice(0, 2)}****{formData.email.slice(-2)}
+                  OTP sent to {formData.email.slice(0, 2)}****{formData.email.slice(-2)}
                 </p>
               </div>
 
@@ -282,7 +269,7 @@ const Login = () => {
                 className="flex items-center space-x-2 text-sm text-text-secondary hover:text-text-primary transition-colors mx-auto"
               >
                 <Icon name="ArrowLeft" size={16} />
-                <span>Change mobile number</span>
+                <span>Change Email</span>
               </button>
             </div>
           )}

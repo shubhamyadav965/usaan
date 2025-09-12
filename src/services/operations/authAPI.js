@@ -5,21 +5,18 @@ import { setUserauth } from "../../Slices/authSlice"
 import { apiConnector } from "../apiconnector"
 import { endpoints } from '../api'
 
-const {
-  LOGIN_API,
-} = endpoints
 
 
-export function sendOtp(email) {
+
+export function sendOtp(email,setStep) {
   return async (dispatch) => {
     const toastId = toast.loading("Sending OTP...");
     dispatch(setLoading(true));
 
     try {
-      console.log(email)
+      console.log("wewe",email)
       const response = await apiConnector("POST", endpoints.SENDOTP_API, {
-        email,
-        checkUserPresent: true,
+        email
       });
 
       console.log("SENDOTP API RESPONSE:", response);
@@ -28,26 +25,17 @@ export function sendOtp(email) {
         throw new Error(response?.data?.message || "OTP sending failed");
       }
 
-      toast.update(toastId, {
-        render: "OTP Sent Successfully",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
-
-      return response;
+      toast.success("OTP Sent Successfully");
+      if(setStep) setStep((prev) => prev + 1);
+      return response ;  
     } catch (error) {
       console.error("SENDOTP API ERROR:", error);
 
-      toast.update(toastId, {
-        render: error.message || "Could Not Send OTP",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.success("OTP Sent Successfully");
 
       return null; // return something explicit to indicate failure
     } finally {
+      toast.dismiss(toastId);
       dispatch(setLoading(false));
     }
   };
@@ -55,17 +43,18 @@ export function sendOtp(email) {
 
 
 
-export function login(email, password, navigate) {
+export function login(email, id, navigate, role) {
   return async (dispatch) => {
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("POST", LOGIN_API, {
+      const response = await apiConnector("POST", endpoints.LOGIN_API, {
         email,
-        password,
+        id,
+        role
       });
 
-      // console.log("LOGIN API RESPONSE............", response);
+      console.log("LOGIN API RESPONSE............", response);
 
       if (!response.data.success) {
         throw new Error(response.data.message);
@@ -80,7 +69,7 @@ export function login(email, password, navigate) {
       // Set user image if not provided
       const userImage = user?.image
         ? user.image
-        : `https://api.dicebear.com/5.x/initials/svg?seed=${user.firstName}%20${user.lastName}`;
+        : `https://api.dicebear.com/5.x/initials/svg?seed=${user.email}`;
 
       // Save token and user to Redux store
       dispatch(setToken(token));
@@ -90,10 +79,20 @@ export function login(email, password, navigate) {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify({ ...user, image: userImage }));
 
-      // Navigate to dashboard
-      navigate("/dashboard/instructor");
+      // Navigate based on account type
+      switch(user.accountType) {
+        case "doctor":
+          navigate("/dashboard/doctor");
+          break;
+        case "health-officer":
+          navigate("/dashboard/health-officer");
+          break;
+        default:
+          navigate("/role-selection");
+          break;
+      }
     } catch (error) {
-      // console.log("LOGIN API ERROR............", error);
+      console.log("LOGIN API ERROR............", error);
       toast.error(error.response?.data?.message || "Login Failed");
     } finally {
       dispatch(setLoading(false));
@@ -109,8 +108,6 @@ export function logout(navigate) {
   return (dispatch) => {
     dispatch(setToken(null))
     dispatch(setUserauth(null))
-    dispatch(setUserprofile(null))
-    dispatch(resetCart())
     localStorage.removeItem("token")
     localStorage.removeItem("user")
     toast.success("Logged Out")

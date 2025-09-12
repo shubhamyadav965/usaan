@@ -12,14 +12,11 @@ const userSchema = new mongoose.Schema(
             required:true,
             trim:true,
         },
-        password:{
-            type:String,
-            required:true,
-        },
+        
         accountType:{
             type:String,
             required:true,
-            enum:["Doctor","health-officer","Patient","Admin"],
+            enum:["doctor","health-officer","patient","admin"],
         },
        
         active: {

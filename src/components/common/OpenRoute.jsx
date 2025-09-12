@@ -4,12 +4,13 @@ import { Navigate } from "react-router-dom";
 
 
 function OpenRoute({ children }) {
-  const token = useSelector((state) => state.auth.token);
+
+  const {token,user} = useSelector((state) => state.auth);
 
   if (!token) {
     return children;
   } else {
-    return <Navigate to="/dashboard/my-profile" replace />;
+    return <Navigate to={`/dashboard/${user?.accountType}`} replace />;
   }
 }
 

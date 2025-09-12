@@ -8,6 +8,7 @@ import RoleSelection from "./pages/RoleSelection";
 import Login from "./pages/Login";
 import HealthOfficerDashboard from "pages/HealthOfficerDashboard";
 import DoctorDashboard from "pages/DoctorDashboard";
+import OpenRoute from "components/common/OpenRoute";
 
 const Routes = () => {
   return (
@@ -21,16 +22,16 @@ const Routes = () => {
             path="/homepage-government-digital-services-portal"
             element={<Homepage />}
           />
-          <Route path="/role-selection" element={<RoleSelection />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/role-selection" element={<OpenRoute><RoleSelection /></OpenRoute>} />
+          <Route path="/login" element={<OpenRoute><Login /></OpenRoute>} />
           <Route path="*" element={<NotFound />} />
           {/*Health Officer-dashboard*/}
           <Route
-            path="/health-officer-dashboard"
+            path="/dashboard/health-officer"
             element={<HealthOfficerDashboard />}
           />
           {/*Doctor-dashboard*/}
-          <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+          <Route path="/dashboard/doctor" element={<DoctorDashboard />} />
         </RouterRoutes>
       </ErrorBoundary>
     </BrowserRouter>
