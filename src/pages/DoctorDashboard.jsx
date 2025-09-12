@@ -3,6 +3,7 @@
 import { dispatch } from "d3";
 import React, { useState, createContext, useContext } from "react";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { logout } from "services/operations/authAPI";
 
@@ -385,11 +386,7 @@ const DialogDescription = ({ children }) => (
 );
 
 // --- Mocking Framework Hooks ---
-const Link = ({ href, children, className }) => (
-  <a href={href} className={className}>
-    {children}
-  </a>
-);
+
 const useRouter = () => ({
   push: (path) => console.log(`Navigating to ${path}`),
 });
@@ -431,7 +428,7 @@ export default function App() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
       <div className="p-6 border-b border-gray-200 dark:border-gray-800">
-        <Link href="#" className="flex items-center gap-2 text-[#F97316]">
+        <Link to="/homepage-government-digital-services-portal" className="flex items-center gap-2 text-[#F97316]">
           <Heart className="h-6 w-6" />
           <span className="font-bold text-lg">Kerala eHealth</span>
         </Link>

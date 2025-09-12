@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, createContext, useContext } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "services/operations/authAPI";
 
 // --- SVG Icons ---
 const ShieldAlert = (props) => (
@@ -272,11 +275,7 @@ const Badge = ({ variant = "default", className, children }) => {
 };
 
 // --- Mocking Framework Hooks ---
-const Link = ({ href, children, className }) => (
-  <a href={href} className={className}>
-    {children}
-  </a>
-);
+
 const useRouter = () => ({
   push: (path) => console.log(`Navigating to ${path}`),
 });
@@ -299,11 +298,13 @@ const useAuth = () => useContext(AuthContext);
 export default function HealthOfficerApp() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const router = useRouter();
 
   const handleLogout = () => {
-    logout();
+    dispatch(logout(navigate));
     router.push("/");
   };
 
@@ -317,7 +318,7 @@ export default function HealthOfficerApp() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
       <div className="p-6 border-b border-gray-200 dark:border-gray-800">
-        <Link href="#" className="flex items-center gap-2 text-[#F97316]">
+        <Link to="/" className="flex items-center gap-2 text-[#F97316]">
           <Heart className="h-6 w-6" />
           <span className="font-bold text-lg">Kerala eHealth</span>
         </Link>
