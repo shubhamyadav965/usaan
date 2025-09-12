@@ -3,31 +3,34 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import Icon from "../components/AppIcon";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import { sendOtp,  login} from "../services/operations/authAPI.js";
+import { useDispatch } from "react-redux";
+import { setToken } from "../Slices/authSlice";
 
 const Login = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const role = searchParams.get("role") || "doctor";
 
-  const [step, setStep] = useState(1); // 1: Input credentials, 2: OTP verification
+  const [step, setStep] = useState(1); // 1: Input, 2: Verify
   const [formData, setFormData] = useState({
-    mobileNumber: "",
+    email: "",
     id: "",
     otp: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
-  // Redirect to role selection if no role specified
   useEffect(() => {
     if (!searchParams.get("role")) {
+      // keep this behavior if required; otherwise remove
       navigate("/role-selection");
     }
   }, [searchParams, navigate]);
 
-  const getRoleInfo = () => {
-    return role === "health-officer"
+  const getRoleInfo = () =>
+    role === "health-officer"
       ? {
           title: "Health Officer",
           idLabel: "Health Officer ID",
@@ -42,68 +45,20 @@ const Login = () => {
           icon: "Stethoscope",
           description: "Access patient records and medical features",
         };
-  };
 
   const roleInfo = getRoleInfo();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleBackToRoleSelection = () => {
     navigate("/role-selection");
   };
 
-  const handleSendOTP = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setOtpSent(true);
-      setStep(2);
-      setCountdown(60);
-      setIsLoading(false);
-
-      // Start countdown
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }, 1500);
-  };
-
-  const handleVerifyOTP = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Simulate OTP verification
-    setTimeout(() => {
-      setIsLoading(false);
-      // Here you would typically redirect to dashboard
-      if (role === "health-officer") {
-        navigate("/health-officer-dashboard");
-      } else if (role === "doctor") {
-        navigate("/doctor-dashboard");
-      } else {
-        navigate("/");
-      }
-    }, 1500);
-  };
-
-  const handleResendOTP = () => {
-    setCountdown(60);
-    setFormData((prev) => ({ ...prev, otp: "" }));
-
+  const startCountdown = (seconds = 60) => {
+    setCountdown(seconds);
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -115,47 +70,77 @@ const Login = () => {
     }, 1000);
   };
 
+  const handleSendOTP = async (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData.email);
+    if (!formData.email || !formData.id) return;
+    setIsLoading(true);
+    try {
+      const res = await sendOtp(formData.email);
+      if (res && res.data.success) {
+        setStep(2);
+        startCountdown(60);
+      } else {
+        console.error("Failed to send OTP", res);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    if (formData.otp.length !== 6) return;
+    setIsLoading(true);
+    try {
+      const res = await login(formData.email, formData.otp);
+      if (res && res.success) {
+        // store token and redirect based on role
+        if (res.token) dispatch(setToken(res.token));
+        if (role === "health-officer") navigate("/health-officer-dashboard");
+        else if (role === "doctor") navigate("/doctor-dashboard");
+        else navigate("/");
+      } else {
+        console.error("OTP verification failed", res);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    if (countdown > 0) return;
+    setFormData((prev) => ({ ...prev, otp: "" }));
+    try {
+      const res = await sendOtp(formData.email);
+      if (res && res.data.success) startCountdown(60);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-primary rounded-full"></div>
-        <div className="absolute top-40 right-20 w-24 h-24 bg-secondary rounded-full"></div>
-        <div className="absolute bottom-32 left-1/4 w-16 h-16 bg-accent rounded-full"></div>
-      </div>
-
       <div className="relative w-full max-w-md">
-        {/* Header */}
         <div className="text-center mb-8">
-          <Link
-            to="/"
-            className="inline-flex items-center space-x-3 mb-6 group"
-          >
+          <Link to="/" className="inline-flex items-center space-x-3 mb-6 group">
             <div className="relative">
               <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-all duration-300">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="w-7 h-7 text-white"
-                  fill="currentColor"
-                >
+                <svg viewBox="0 0 24 24" className="w-7 h-7 text-white" fill="currentColor">
                   <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1V3H9V1L3 7V9H21ZM21 10H3V12H5V18C5 19.1 5.9 20 7 20H17C18.1 20 19 19.1 19 18V12H21V10Z" />
                 </svg>
               </div>
               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-rose-500 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
-                <Icon
-                  name="Heart"
-                  size={10}
-                  className="text-white fill-current"
-                />
+                <Icon name="Heart" size={10} className="text-white fill-current" />
               </div>
             </div>
             <div>
-              <div className="text-xl font-bold text-primary leading-tight">
-                Migrant Health Records
-              </div>
-              <div className="text-sm text-primary/70 font-medium">
-                Government of Kerala
-              </div>
+              <div className="text-xl font-bold text-primary leading-tight">Migrant Health Records</div>
+              <div className="text-sm text-primary/70 font-medium">Government of Kerala</div>
             </div>
           </Link>
 
@@ -163,49 +148,34 @@ const Login = () => {
             {step === 1 ? `Login as ${roleInfo.title}` : "Verify OTP"}
           </h1>
           <p className="text-text-secondary">
-            {step === 1
-              ? roleInfo.description
-              : "We've sent a 6-digit code to your mobile number"}
+            {step === 1 ? roleInfo.description : "We've sent a 6-digit code to your mobile number"}
           </p>
         </div>
 
-        {/* Login Form */}
         <div className="bg-white rounded-2xl shadow-xl border border-border p-6 sm:p-8">
           {step === 1 ? (
             <form onSubmit={handleSendOTP} className="space-y-6">
-              {/* Mobile Number Input */}
               <div className="space-y-2">
-                <label
-                  htmlFor="mobileNumber"
-                  className="text-sm font-medium text-text-primary"
-                >
-                  Mobile Number
-                </label>
+                <label htmlFor="email" className="text-sm font-medium text-text-primary">Email</label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary">
-                    <Icon name="Phone" size={18} />
+                    <Icon name="Mail" size={18} />
                   </div>
                   <Input
-                    id="mobileNumber"
-                    name="mobileNumber"
-                    type="tel"
-                    value={formData.mobileNumber}
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="Enter your mobile number"
+                    placeholder="Enter your Email"
                     className="pl-10 h-12"
                     required
                   />
                 </div>
               </div>
 
-              {/* ID Input */}
               <div className="space-y-2">
-                <label
-                  htmlFor="id"
-                  className="text-sm font-medium text-text-primary"
-                >
-                  {roleInfo.idLabel}
-                </label>
+                <label htmlFor="id" className="text-sm font-medium text-text-primary">{roleInfo.idLabel}</label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary">
                     <Icon name={roleInfo.icon} size={18} />
@@ -223,13 +193,12 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Send OTP Button */}
               <Button
                 type="submit"
                 variant="default"
                 size="lg"
                 className="w-full h-12 text-lg"
-                disabled={isLoading || !formData.mobileNumber || !formData.id}
+                disabled={isLoading || !formData.email || !formData.id}
               >
                 {isLoading ? (
                   <div className="flex items-center space-x-2">
@@ -246,14 +215,8 @@ const Login = () => {
             </form>
           ) : (
             <form onSubmit={handleVerifyOTP} className="space-y-6">
-              {/* OTP Input */}
               <div className="space-y-2">
-                <label
-                  htmlFor="otp"
-                  className="text-sm font-medium text-text-primary"
-                >
-                  Enter OTP
-                </label>
+                <label htmlFor="otp" className="text-sm font-medium text-text-primary">Enter OTP</label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary">
                     <Icon name="Shield" size={18} />
@@ -271,12 +234,10 @@ const Login = () => {
                   />
                 </div>
                 <p className="text-xs text-text-secondary">
-                  OTP sent to +91 {formData.mobileNumber.slice(0, 2)}****
-                  {formData.mobileNumber.slice(-2)}
+                  OTP sent to +91 {formData.email.slice(0, 2)}****{formData.email.slice(-2)}
                 </p>
               </div>
 
-              {/* Verify OTP Button */}
               <Button
                 type="submit"
                 variant="default"
@@ -297,12 +258,9 @@ const Login = () => {
                 )}
               </Button>
 
-              {/* Resend OTP */}
               <div className="text-center">
                 {countdown > 0 ? (
-                  <p className="text-sm text-text-secondary">
-                    Resend OTP in {countdown}s
-                  </p>
+                  <p className="text-sm text-text-secondary">Resend OTP in {countdown}s</p>
                 ) : (
                   <button
                     type="button"
@@ -316,7 +274,6 @@ const Login = () => {
             </form>
           )}
 
-          {/* Back to Step 1 */}
           {step === 2 && (
             <div className="mt-6 pt-6 border-t border-border">
               <button
@@ -330,7 +287,6 @@ const Login = () => {
             </div>
           )}
 
-          {/* Back to Role Selection */}
           <div className="mt-4 text-center">
             <button
               type="button"
@@ -343,32 +299,16 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Footer Links */}
         <div className="mt-8 text-center space-y-4">
           <div className="flex items-center justify-center space-x-6 text-sm">
-            <Link
-              to="/"
-              className="text-text-secondary hover:text-primary transition-colors"
-            >
-              Back to Home
-            </Link>
+            <Link to="/" className="text-text-secondary hover:text-primary transition-colors">Back to Home</Link>
             <span className="text-border">|</span>
-            <Link
-              to="/help"
-              className="text-text-secondary hover:text-primary transition-colors"
-            >
-              Need Help?
-            </Link>
+            <Link to="/help" className="text-text-secondary hover:text-primary transition-colors">Need Help?</Link>
           </div>
 
           <div className="text-xs text-text-secondary">
-            <p>
-              By logging in, you agree to our Terms of Service and Privacy
-              Policy
-            </p>
-            <p className="mt-1">
-              © 2025 Government of Kerala. All rights reserved.
-            </p>
+            <p>By logging in, you agree to our Terms of Service and Privacy Policy</p>
+            <p className="mt-1">© 2025 Government of Kerala. All rights reserved.</p>
           </div>
         </div>
       </div>

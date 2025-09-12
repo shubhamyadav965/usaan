@@ -1,10 +1,27 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom/client";
 import App from "./App";
+import {BrowserRouter} from "react-router-dom";
+import {Toaster} from 'react-hot-toast';
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+import {rootReducer} from "./reducer/index"
 import "./styles/tailwind.css";
 import "./styles/index.css";
 
-const container = document.getElementById("root");
-const root = createRoot(container);
+const store = configureStore({
+  reducer:rootReducer,
+});
 
-root.render(<App />);
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+
+  <Provider store={store}>
+          <App />
+          <Toaster></Toaster>
+  </Provider>
+  
+
+);
+
+
