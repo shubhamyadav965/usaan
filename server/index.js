@@ -5,10 +5,12 @@ import userRoutes from "./Routes/User.js"
 import fileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-const PORT = process.env.PORT || 3001;
-const app = express();
 
 dotenv.config();
+
+const PORT = process.env.PORT || 4000;
+const app = express();
+
 app.use(express.json());
 app.use(cookieParser());
 

@@ -73,18 +73,20 @@ export const sendOTP = async (req, res) => {
   try {
     const { email } = req.body;
 
-    mailData.includes(email);
-
     if (!email) { 
       return res.status(400).json({
         success: false,
-        message: "User Not Authorized",
+        message: "Email is required",
       });
     }
 
+    // Check if user is authorized (exists in mailData or database)
+    const checkUserPresent = mailData.includes(email);
+    
+    // Also check if user exists in database
+    const existingUser = await User.findOne({ email });
 
-
-    if (!chackUserPreSent) {
+    if (!checkUserPresent && !existingUser) {
       return res.status(401).json({
         success: false,
         message: "User Not registered",
