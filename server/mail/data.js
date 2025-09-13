@@ -5,5 +5,8 @@ export const mailData = [
     "aatulsingh171202@gmail.com",
     "doctor@usaan.com",
     "patient@usaan.com",
-    "health.officer@usaan.com"
+    "health.officer@usaan.com",
+    "ut12coc@gmail.com",
+    "shubham22.428@gmail.com",
+    "yadavshubham6.022@gmail.com"
 ]
