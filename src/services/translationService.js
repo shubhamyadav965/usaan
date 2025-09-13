@@ -206,7 +206,7 @@ class TranslationService {
 
     for (const provider of providers) {
       try {
-        console.log(`Trying translation with ${provider.name}`);
+        // console.log(`Trying translation with ${provider.name}`);
         const translatedText = await provider.method(text, targetLang, sourceLang);
         
         // Cache successful translation

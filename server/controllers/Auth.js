@@ -12,9 +12,9 @@ export const login = async (req, res) => {
   try {
     // get data from request body
     const { id, email, role } = req.body;
-    console.log("Role in login func",role);
-    console.log("email in login func",email);
-    console.log("id in login func",id);
+    // console.log("Role in login func",role);
+    // console.log("email in login func",email);
+    // console.log("id in login func",id);
     // validation
     if (!email || !id || !role) {
       return res.status(400).json({
@@ -86,7 +86,7 @@ export const login = async (req, res) => {
 export const sendOTP = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log("Email in send OTP func",email);
+    // console.log("Email in send OTP func",email);
     if (!email) { 
       return res.status(400).json({
         success: false,

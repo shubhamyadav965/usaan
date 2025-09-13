@@ -25,11 +25,11 @@ async function sendVerificationEmail(email, otp) {
       "Verification Email from USAAN",
       otpTemplate(otp),
     );
-    console.log("Email sent Successfully:", mailResponse);
+    // console.log("Email sent Successfully:", mailResponse);
   } catch (error) {
     console.log("Error occured while sending emails: ", error);
-    console.log("otp:-",otp);
-    console.log("email:-",email);
+    // console.log("otp:-",otp);
+    // console.log("email:-",email);
 
     throw error;
   }

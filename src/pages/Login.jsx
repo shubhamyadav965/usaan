@@ -76,7 +76,7 @@ const Login = () => {
       console.error("Email and ID are required");
       return;}
     setIsLoading(true);
-    console.log("Sending OTP to:", formData.email);
+    // console.log("Sending OTP to:", formData.email);
     try {
       dispatch(sendOtp(formData.email, setStep));
     } catch (err) {

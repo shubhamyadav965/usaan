@@ -14,12 +14,12 @@ export function sendOtp(email,setStep) {
     dispatch(setLoading(true));
 
     try {
-      console.log("wewe",email)
+      // console.log("wewe",email)
       const response = await apiConnector("POST", endpoints.SENDOTP_API, {
         email
       });
 
-      console.log("SENDOTP API RESPONSE:", response);
+      // console.log("SENDOTP API RESPONSE:", response);
 
       if (!response?.data?.success) {
         throw new Error(response?.data?.message || "OTP sending failed");
@@ -54,7 +54,7 @@ export function login(email, id, navigate, role) {
         role
       });
 
-      console.log("LOGIN API RESPONSE............", response);
+      // console.log("LOGIN API RESPONSE............", response);
 
       if (!response.data.success) {
         throw new Error(response.data.message);
