@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
+import { useTranslation } from '../../contexts/TranslationContext';
+import { T } from '../../hooks/useTranslation';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { currentLanguage, changeLanguage, supportedLanguages, getCurrentLanguageInfo } = useTranslation();
 
   const navigationItems = [
     {
@@ -45,6 +48,10 @@ const Header = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleLanguageChange = (languageCode) => {
+    changeLanguage(languageCode);
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-border gov-shadow-sm">
       <div className="max-w-7xl mx-auto">
@@ -75,10 +82,10 @@ const Header = () => {
               {/* Brand Text */}
               <div className="hidden sm:block">
                 <div className="text-lg font-bold text-primary leading-tight">
-                  GovTech India
+                  <T>GovTech India</T>
                 </div>
                 <div className="text-xs text-muted-foreground font-medium">
-                  Digital Services Portal
+                  <T>Digital Services Portal</T>
                 </div>
               </div>
             </Link>
@@ -96,7 +103,7 @@ const Header = () => {
                 }`}
               >
                 <Icon name={item?.icon} size={16} />
-                <span>{item?.label}</span>
+                <span><T>{item?.label}</T></span>
               </Link>
             ))}
             
@@ -104,7 +111,7 @@ const Header = () => {
             <div className="relative group">
               <button className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-text-primary hover:bg-muted hover:text-primary smooth-transition">
                 <Icon name="MoreHorizontal" size={16} />
-                <span>More</span>
+                <span><T>More</T></span>
                 <Icon name="ChevronDown" size={14} />
               </button>
               
@@ -118,7 +125,7 @@ const Header = () => {
                       className="flex items-center space-x-3 px-4 py-2 text-sm text-text-primary hover:bg-muted hover:text-primary smooth-transition"
                     >
                       <Icon name={item?.icon} size={16} />
-                      <span>{item?.label}</span>
+                      <span><T>{item?.label}</T></span>
                     </Link>
                   ))}
                 </div>
@@ -131,7 +138,7 @@ const Header = () => {
             {/* Search Button - Desktop */}
             <button className="hidden md:flex items-center space-x-2 px-4 py-2 bg-muted rounded-lg text-sm text-muted-foreground hover:bg-border hover:text-text-primary smooth-transition">
               <Icon name="Search" size={16} />
-              <span>Search services...</span>
+              <span><T>Search services...</T></span>
               <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-xs font-medium text-muted-foreground">
                 <span className="text-xs">⌘</span>K
               </kbd>
@@ -145,7 +152,7 @@ const Header = () => {
               iconPosition="left"
               className="hidden sm:flex"
             >
-              Login
+              <T>Login</T>
             </Button>
 
             {/* Get Started Button */}
@@ -156,8 +163,39 @@ const Header = () => {
               iconPosition="right"
               className="hidden sm:flex"
             >
-              Get Started
+              <T>Get Started</T>
             </Button>
+
+            {/* Language Selector */}
+            <div className="relative group">
+              <button className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium text-text-primary hover:bg-muted smooth-transition">
+                <Icon name="Globe" size={16} />
+                <span className="hidden md:inline">{getCurrentLanguageInfo()?.flag}</span>
+                <span className="hidden lg:inline">{getCurrentLanguageInfo()?.name}</span>
+                <Icon name="ChevronDown" size={12} />
+              </button>
+              
+              {/* Language Dropdown */}
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg border border-border gov-shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible smooth-transition z-50">
+                <div className="py-2">
+                  {supportedLanguages?.map((language) => (
+                    <button
+                      key={language?.code}
+                      onClick={() => handleLanguageChange(language?.code)}
+                      className={`flex items-center space-x-3 w-full px-4 py-2 text-sm text-left hover:bg-muted smooth-transition ${
+                        currentLanguage === language?.code ? 'bg-primary/10 text-primary' : 'text-text-primary'
+                      }`}
+                    >
+                      <span className="text-lg">{language?.flag}</span>
+                      <span>{language?.name}</span>
+                      {currentLanguage === language?.code && (
+                        <Icon name="Check" size={14} className="ml-auto" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -198,7 +236,7 @@ const Header = () => {
                   }`}
                 >
                   <Icon name={item?.icon} size={18} />
-                  <span>{item?.label}</span>
+                  <span><T>{item?.label}</T></span>
                 </Link>
               ))}
 
@@ -212,9 +250,40 @@ const Header = () => {
                     className="flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-text-primary hover:bg-muted smooth-transition"
                   >
                     <Icon name={item?.icon} size={18} />
-                    <span>{item?.label}</span>
+                    <span><T>{item?.label}</T></span>
                   </Link>
                 ))}
+              </div>
+
+              {/* Language Selector - Mobile */}
+              <div className="pt-2 border-t border-border">
+                <div className="text-sm font-medium text-text-primary mb-2 px-4">
+                  <T>Language</T>
+                </div>
+                <div className="space-y-1">
+                  {supportedLanguages?.map((language) => (
+                    <button
+                      key={language?.code}
+                      onClick={() => {
+                        handleLanguageChange(language?.code);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm smooth-transition ${
+                        currentLanguage === language?.code 
+                          ? 'bg-primary/10 text-primary' 
+                          : 'text-text-primary hover:bg-muted'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">{language?.flag}</span>
+                        <span>{language?.name}</span>
+                      </div>
+                      {currentLanguage === language?.code && (
+                        <Icon name="Check" size={16} />
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Action Buttons - Mobile */}
@@ -225,7 +294,7 @@ const Header = () => {
                   iconName="User"
                   iconPosition="left"
                 >
-                  Login
+                  <T>Login</T>
                 </Button>
                 <Button 
                   variant="default" 
@@ -233,7 +302,7 @@ const Header = () => {
                   iconName="ArrowRight"
                   iconPosition="right"
                 >
-                  Get Started
+                  <T>Get Started</T>
                 </Button>
               </div>
             </div>

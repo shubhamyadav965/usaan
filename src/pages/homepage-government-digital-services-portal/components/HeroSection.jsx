@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
+import { T } from '../../../hooks/useTranslation';
 
 const HeroSection = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -66,7 +67,7 @@ const HeroSection = () => {
                 <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                   <Icon name="Shield" size={14} className="text-white" />
                 </div>
-                <span className="text-sm font-medium text-primary">Government of India</span>
+                <span className="text-sm font-medium text-primary"><T>Government of India</T></span>
                 <div className="w-2 h-2 bg-accent rounded-full"></div>
               </div>
             </div>
@@ -74,11 +75,11 @@ const HeroSection = () => {
             {/* Main Heading */}
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold text-text-primary leading-tight">
-                Digital India
-                <span className="block text-primary">Simplified</span>
+                <T>Digital India</T>
+                <span className="block text-primary"><T>Simplified</T></span>
               </h1>
               <p className="text-xl text-text-secondary leading-relaxed max-w-xl">
-                Access all government services from one secure platform. Fast, transparent, and designed for every citizen.
+                <T>Access all government services from one secure platform. Fast, transparent, and designed for every citizen.</T>
               </p>
             </div>
 
@@ -88,13 +89,13 @@ const HeroSection = () => {
                 <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center">
                   <Icon name="Clock" size={16} className="text-accent" />
                 </div>
-                <span className="text-sm font-medium text-text-primary">24/7 Access</span>
+                <span className="text-sm font-medium text-text-primary"><T>24/7 Access</T></span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
                   <Icon name="Shield" size={16} className="text-primary" />
                 </div>
-                <span className="text-sm font-medium text-text-primary">Secure & Safe</span>
+                <span className="text-sm font-medium text-text-primary"><T>Secure & Safe</T></span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
